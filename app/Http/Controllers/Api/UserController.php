@@ -19,7 +19,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $this->userRepository->all($request->filter ?? '');
+        $user = $this->userRepository->getPaginate(
+            totalPerPage: $request->total_per_page ?? 15,
+            page: $request->page ?? 1,
+            filter: $request->filter ?? ''
+        );
 
         return UserResource::collection($user);
     }
