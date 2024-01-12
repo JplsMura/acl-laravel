@@ -8,7 +8,8 @@ use App\DTO\Users\{
 };
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\{
+
+use App\Http\Requests\Api\Users\{
     StoreUserRequest,
     UpdateUserRequest
 };
