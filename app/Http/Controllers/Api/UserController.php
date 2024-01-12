@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\DTO\Users\CreateUserDTO;
+use App\DTO\Users\{
+    CreateUserDTO,
+    UpdateUserDTO
+};
+
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\StoreUserRequest;
-use App\Http\Resources\UserResource;
-use App\Repositories\UserRepository;
-use GuzzleHttp\Promise\Create;
+use App\Http\Requests\Api\{
+    StoreUserRequest,
+    UpdateUserRequest
+};
+
+use App\Http\Resources\{
+    UserResource
+};
+
+use App\Repositories\{
+    UserRepository
+};
+
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -45,15 +59,25 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        if (!$user = $this->userRepository->findById($id)) {
+            return response()->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+        
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        $response = $this->userRepository->update(new UpdateUserDTO(...[$id, ...$request->validated()]));
+
+        if (!$response) {
+            return response()->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json(['message' => 'User update with sucess'], Response::HTTP_OK);
     }
 
     /**
@@ -61,6 +85,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!$this->userRepository->delete($id)) {
+            return response()->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json(['message' => 'User deleted with sucess'], Response::HTTP_OK);
     }
 }
