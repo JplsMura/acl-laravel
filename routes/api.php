@@ -4,7 +4,14 @@ use App\Http\Controllers\Api\{
     PermissionController,
     UserController
 };
+
+use App\Http\Controllers\Api\Auth\{
+    AuthApiController
+};
+
 use Illuminate\Support\Facades\Route;
+
+Route::post('/auth', [AuthApiController::class, 'auth'])->name('auth');
 
 Route::apiResource('/permissions', PermissionController::class);
 
