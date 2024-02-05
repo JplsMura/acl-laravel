@@ -67,4 +67,14 @@ class UserRepository
 
         return $user->delete();
     }
+
+    public function syncPermission(string $id, array $permissions): ?bool
+    {
+        if (!$user = $this->findById($id)) {
+            return null;
+        }
+
+        $user->permissions()->sync($permissions);
+        return true;
+    }
 }
