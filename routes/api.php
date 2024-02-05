@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/permissions', PermissionController::class);
 
+    Route::get('users/{user}/permission', [PermissionUserController::class, 'getPermissionOfUser'])->name('user.permission');
+
     Route::post('users/{user}/permission-sync', [PermissionUserController::class, 'syncPermissionOfUser'])->name('user.permission.sync');
     
     Route::apiResource('/users', UserController::class);

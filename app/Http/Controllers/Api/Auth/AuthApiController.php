@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\{
 
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
 
 class AuthApiController extends Controller
@@ -48,6 +49,8 @@ class AuthApiController extends Controller
 
     public function me()
     {
-        return response()->json(['user' => Auth::user()]);
+        $user = Auth::user();
+        $user->load('permissions');
+        return new UserResource($user);
     }
 }

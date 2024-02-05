@@ -8,6 +8,7 @@ use App\Repositories\{
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PermissionResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionUserController extends Controller
@@ -26,5 +27,15 @@ class PermissionUserController extends Controller
         }
 
         return response()->json(['message' => 'Permission sync with success'], Response::HTTP_OK);
+    }
+
+    public function getPermissionOfUser(string $id)
+    {   
+        if (!$this->userRepository->findById($id)) {
+            return response()->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $permissions = $this->userRepository->getPermissionsByUserId($id);
+        return PermissionResource::collection($permissions);
     }
 }
